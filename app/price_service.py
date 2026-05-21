@@ -1,8 +1,18 @@
+import os
+
 import requests
-from app.config import FINNHUB_API_KEY
+from dotenv import load_dotenv
+
+from app.config import FINNHUB_API_KEY as CONFIG_FINNHUB_API_KEY
+
+load_dotenv()
+
+FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY") or CONFIG_FINNHUB_API_KEY
 
 
 def get_price(ticker: str):
+    if not FINNHUB_API_KEY:
+        raise ValueError("FINNHUB_API_KEY is missing.")
 
     url = "https://finnhub.io/api/v1/quote"
 
@@ -14,6 +24,9 @@ def get_price(ticker: str):
     response = requests.get(url, params=params)
 
     data = response.json()
+
+    if "c" not in data:
+        raise ValueError(data)
 
     return data["c"]
 

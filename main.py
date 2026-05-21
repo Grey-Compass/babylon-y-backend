@@ -5,6 +5,7 @@ from datetime import datetime
 
 from app.news_service import get_news
 from app.sentiment_service import get_sentiment
+from app.valuation_service import get_valuation_data
 
 import os
 import requests
@@ -64,6 +65,11 @@ MAX_HISTORY_POINTS = 50
 @app.get("/")
 def root():
     return {"message": "API is working"}
+
+
+@app.get("/valuation")
+def valuation(ticker: str):
+    return get_valuation_data(ticker)
 
 
 
